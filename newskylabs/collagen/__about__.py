@@ -34,17 +34,17 @@ __all__ = [
     '__date__',
 ]
 
-__package_name__ = 'collagen'
+__package_name__ = 'newskylabs-collagen'
 __version__      = '0.0.1.dev1'
 __status__       = 'Development'
-__description__  = '{'name': 'NewSkyLabs'} Python project {}'.format(__package_name__)
+__description__  = 'NewSkyLabs Python project {}'.format(__package_name__)
 __author__       = 'Dietrich Bollmann'
 __authors__      = [__author__]
 __maintainer__   = __author__
 __email__        = 'dietrich@newskylabs.net'
 __contact__      = __email__
 __copyright__    = 'Copyright 2019 {}'.format(__author__)
-__url__          = 'http://newskylabs.net/python/packages/{}'.format(__package_name__)
+__url__          = 'http://newskylabs.com/python/packages/{}'.format(__package_name__)
 __license__      = 'Apache License 2.0, http://www.apache.org/licenses/LICENSE-2.0'
 __date__         = '2019/03/07'
 

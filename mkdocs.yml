@@ -14,16 +14,30 @@
 ## limitations under the License.
 ## ---------------------------------------------------------
 
-site_name: NewSkyLabs Collagen
-site_description: NewSkyLabs Collagen Documentation.
+# collagen docs
+
+site_name: Collagen Documentation
+site_description: Collagen Documentation.
 site_author: Dietrich Bollmann
+theme: readthedocs
+extra_css: [extra.css]
+pages:
+- Home: index.md
+- User Guide:
+  - Installation: user-guide/installation.md
+  - Getting Started: user-guide/getting-started.md
+  - Image Augmentation: user-guide/image-augmentation.md
+  - Experiments with Musical Notation: user-guide/experiments-with-musical-notation.md
+  - Implementation: user-guide/implementation.md
+  - Development Tools: user-guide/development-tools.md
+  - Documentation Tools: user-guide/documentation-tools.md
+- About:
+  - Readme: about/README.md
+  - Future Directions: about/future-directions.md
+  - Contributing: about/CONTRIBUTING.md
+  - Release Notes: about/release-notes.md
+  - License: about/LICENSE.md
 
-theme:
-  name: mkdocs
-
-nav:
-  - Home: index.md
-    
 copyright: Copyright &copy; 2019 <a href="http://dietrich.newskylabs.net/">Dietrich Bollmann</a>.
 
 ## =========================================================

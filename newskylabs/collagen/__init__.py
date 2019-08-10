@@ -14,7 +14,7 @@
 ## limitations under the License.
 ## ---------------------------------------------------------
 
-from newskylabs.temple.__about__ import (
+from newskylabs.collagen.__about__ import (
     __package_name__,
     __version__,
     __status__,
@@ -45,6 +45,12 @@ __all__ = [
     '__license__',
     '__date__',
 ]
+
+from . import commands
+from . import generators
+from . import graphics
+from . import scripts
+from . import utils
 
 ## =========================================================
 ## =========================================================

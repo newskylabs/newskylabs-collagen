@@ -73,14 +73,63 @@ setuptools.setup(
     author_email=__email__,
     license=__license__,
     url=__url__,
+    keywords='deep learning, data augmentation, data generation.',
+    packages=packages,
+    entry_points={
+        'console_scripts': [
+            'collagen = newskylabs.collagen.__main__:cli',
+            'cdt = newskylabs.collagen.scripts.cdt:cli',
+        ]
+    },
+    package_data={
+        'newskylabs.collagen.settings': ['default_settings.yaml'],
+    },
+    include_package_data=True,
+    scripts=[
+        # TODO: Generate this list dynamically
+        'bin/cdt-check-source-distribution',
+        'bin/cdt-check-tarball',
+        'bin/cdt-clean',
+        'bin/cdt-collagen',
+        'bin/cdt-get-setting',
+        'bin/cdt-install',
+        'bin/cdt-make-source-distribution',
+        'bin/cdt-make-tarball',
+        'bin/cdt-reinstall',
+        'bin/cdt-clean-server',
+        'bin/cdt-upload-source-distribution',
+        'bin/cdt-upload-tarball',
+    ],
+    install_requires=[
+        'click>=6.7',
+        'numpy>=1.12.1',
+        'idx2numpy>=1.2.1',
+        'mkdocs>=0.17.2',
+        'matplotlib>=2.2.0',
+        'Pillow>=5.0.0',
+        'pathlib>=1.0.1',
+        'progressbar2>=3.39.2',
+        'pyyaml>=3.12',
+        'scikit-image>=0.13.0',
+        'scipy>=1.0.0',
+    ],
     classifiers=[
-        'Programming Language :: Python :: 3',
+        'Development Status :: 3 - Alpha',
+        'Environment :: Console',
+        'Intended Audience :: Developers',
+        'Intended Audience :: Education',
+        'Intended Audience :: Science/Research',
         'License :: OSI Approved :: Apache Software License',
+        'Programming Language :: Python :: 3',
+        'Topic :: Scientific/Engineering :: Artificial Intelligence',
+        'Topic :: Software Development :: Libraries',
+        'Topic :: Software Development :: Libraries :: Python Modules'
         'Operating System :: OS Independent',
     ],
     platforms=['Posix', 'Unix', 'Linux', 'MacOS X', 'Windows'],
-    packages=packages,
-    include_package_data=True,
+    setup_requires=['setuptools-markdown'],
+    # Install unzipped to be able to use the .md and .yaml files
+    zip_safe=False
 )
 
 ## =========================================================
