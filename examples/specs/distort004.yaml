@@ -1,0 +1,39 @@
+# -*- mode: yaml -*-
+## =========================================================
+## Data set specification file
+## 
+## collagen grid 5 --dataset checkerboard --width 1 --height 1 --spec $COLLAGEN/examples/specs/distort004.yaml
+## 
+## ---------------------------------------------------------
+
+augmentation-pipeline:
+
+  - distort:
+      mesh: [2, 2]
+      #| magnitude: 0.0
+      magnitude: 0.2
+      indent: 0.2
+      #| show-mesh: True
+      #| show-mesh: 0.5
+      #| show-mesh: 1.0
+      show-mesh: inverse
+      #| show-mesh: red
+      #| show-mesh: green
+      #| show-mesh: blue
+
+#|   - distort:
+#|       mesh: [2, 2]
+#|       magnitude: 0.2
+#| 
+#|   - distort:
+#|       mesh: [4, 4]
+#|       magnitude: 0.3
+#| 
+#|   - distort:
+#|       mesh: [4, 4]
+#|       magnitude: 0.2
+
+## =========================================================
+## =========================================================
+
+# fin.

@@ -1,0 +1,9 @@
+include .gitignore
+include CONTRIBUTING.md
+include LICENSE
+include MANIFEST.in
+include README.md
+include bin/*
+recursive-include docs *.yaml *.yml *.md *.css *.png
+recursive-include collagen *.yaml .gitignore
+recursive-include examples *.yaml

@@ -1,0 +1,34 @@
+# -*- mode: yaml -*-
+## =========================================================
+## Data set specification file
+## ---------------------------------------------------------
+
+dataset: 
+  name: notes000
+  classes:
+    half: 1
+    quarter: 2
+
+subsets:
+  train: 10
+  valid:  4
+  test:   4
+
+augmentation-pipeline:
+
+  - mirror:
+      probability: 0.5
+      direction: y
+
+  - rotate:
+      probability: 0.5
+      angle: 90
+      
+scale: 2
+
+dir: ~/.collagen/data/notes
+
+## =========================================================
+## =========================================================
+
+## fin.

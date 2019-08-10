@@ -1,0 +1,103 @@
+# -*- mode: yaml -*-
+## =========================================================
+## Data set specification file
+## ---------------------------------------------------------
+
+augmentation-pipeline:
+
+## to do:
+
+  - rescale:
+      coordinates: x
+      min: 0.3
+      max: 1.3
+
+  - rescale:
+      coordinates: x
+      min: 0.3
+      max: 1.3
+
+#| 
+#|   - shear:
+#|       probability: 0.7
+#|       axis: x
+#|       min: -45
+#|       max:  45
+#| 
+#|   - shear:
+#|       probability: 0.7
+#|       axis: y
+#|       min: -45
+#|       max:  45
+#| 
+#|   - flip-left-right:
+#|       probability: 0.4
+#| 
+#|   - flip-top-bottom:
+#|       probability: 0.8
+#| 
+#|   - rotate90:
+#|       probability: 0.3
+#| 
+#|   - skew:
+#|       probability: 0.8
+#|       magnitude: 1
+#| 
+#|   - shear:
+#|       probability: 0.8
+#|       max-shear-left: 15
+#|       max-shear-right: 15
+#| 
+#|   - random-distortion:
+#|       probability: 0.8
+#|       grid-width: 3
+#|       grid-height: 3
+#|       magnitude: 10
+#| 
+#|   - zoom:
+#| 
+#|   - zoom:
+#|       min: 0.3
+#|       max: 1.3
+#| 
+#|   - scale:
+#|       axis: x, y, both (same as zoom)
+#| 
+#|   - translate:
+#| 
+#|   - reflect:
+#| 
+#|   - erose:
+#| 
+#|   - dilate:
+#| 
+#|   - shift:
+#| 
+#|   - erosion:
+#| 
+#|   - dilation:
+#| 
+
+## done:
+    
+#|   - wrap:
+#|       colour: 255
+#|       y: 60
+#|       x: 30
+#|       
+#|   - pad:
+#|       colour: 255
+#|       width: 10
+#|       
+#|   - rotate:
+#|       probability: 0.7
+#|       min: -25
+#|       max:  25
+#| 
+#|   - unpad:
+#|       width: 10
+
+## =========================================================
+## =========================================================
+
+# fin.

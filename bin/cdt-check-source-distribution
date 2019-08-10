@@ -1,0 +1,76 @@
+#!/bin/bash
+
+## Usage:
+## 
+##   cdt-check-source-distribution
+
+# Check if lftp is installed
+if [ -z "$COLLAGEN" ]; then
+  echo "ERROR The COLLAGEN environment variable has to be set to the 'collagen.git' directory!"
+  exit
+fi
+
+function deval () {
+  cmd="$@"
+  echo ">>> $cmd"
+  eval $cmd
+}
+
+function get_collagen_version () {
+  # Return package version as defined in `collagen/__main__.py` (ex: 1.2.3)."""
+
+  # Parsing the version from a spec like this:
+  # __version__ = '1.2.3'
+  main_file="$COLLAGEN/collagen/__main__.py"
+  cat "$main_file" | perl -ne "if (/__version__\s*=/) { s|.*['\"]([^'\"]*)['\"].*|\1|; print $_; }"
+}
+
+function make_tmpdir () {
+  # Make a temporary dir
+
+  # Get collagen version
+  version=$(get_collagen_version)
+
+  timestamp=$(date '+%Y-%m-%d.%H-%M-%S')
+  tmpdir="/tmp/collagen/${version}/${timestamp}"
+  mkdir -p "${tmpdir}"
+
+  echo "${tmpdir}"
+}
+
+function get_source_distribution_name () {
+  # Create a tarball
+
+  # Get collagen version
+  version=$(get_collagen_version)
+
+  dist_dir="${COLLAGEN}/dist"
+
+  tarball="collagen-${version}.tar.gz"
+  tarball_path="${dist_dir}/${tarball}"
+
+  echo "${tarball_path}"
+}
+
+function check_source_distribution_tarball () {
+  # Check the source distribution tarball
+
+  tmpdir=$(make_tmpdir)
+  tarball_path=$(get_source_distribution_name)
+  tarball=$(basename "${tarball_path}")
+  unpacked_dir="${tarball%.*.*}"
+
+  # Unpack the tarball in a tmp dir
+  deval cd "${tmpdir}"
+  deval cp "${tarball_path}" .
+  deval tar zxvf "${tarball}"
+  deval ls -la 
+
+  # Compare to the original development tree
+  deval diff -r "${COLLAGEN}" "${tmpdir}/${unpacked_dir}"
+}
+
+# Check if the tarball contains everything necessary
+check_source_distribution_tarball
+
+## fin.

@@ -1,0 +1,345 @@
+"""newskylabs/collagen/generators/digit_generator.py:
+
+DigitGenerator class.
+
+This class can be used to generate digit shapes - first by randomly
+selecting them out of a digit data set, second by augmenting their
+shape using a set of defined manipulations.
+
+"""
+
+__author__      = "Dietrich Bollmann"
+__email__       = "dietrich@formgames.org"
+__copyright__   = "Copyright 2018 Dietrich Bollmann"
+__license__     = "Apache License 2.0, http://www.apache.org/licenses/LICENSE-2.0"
+__date__        = "2018/02/21"
+
+import time, datetime
+import numpy as np
+import importlib
+from newskylabs.collagen.graphics.image import Image, image_grid
+from newskylabs.collagen.utils.dataset_tools import load_dataset_dictionary
+from newskylabs.collagen.utils.generic import pretty_print_numpy_array
+
+from newskylabs.augmentation.pipeline import AugmentationPipeline
+
+## =========================================================
+## Utilities
+## ---------------------------------------------------------
+
+def _random_spaces(min, max, num):
+    spaces = np.random.randint(min, max+1, num)
+    return spaces
+
+## =========================================================
+## class DigitGenerator
+## ---------------------------------------------------------
+
+class DigitGenerator(AugmentationPipeline):
+    """
+    A digit generator class.
+    """
+
+    def __init__(self, dataset=None, subset=None):
+        """
+        Initializer of class DigitGenerator.
+
+        Parameters
+        ----------
+        dataset:
+            Digit dataset. Examples are: 'mnist', 'digits5x3', ...
+        subset:
+            Subset of the given dataset; either 'train' or 'test'.
+
+        Returns
+        -------
+        An instance of class DigitGenerator.
+        """
+
+        self._dataset = dataset
+        self._subset  = subset
+
+        if dataset != None:
+            self.load_dataset(dataset, subset=subset)
+
+        # Call the AugmentationPipeline constructor
+        super(DigitGenerator, self).__init__()
+
+    def load_dataset(self, dataset, subset='train'):
+        """
+        Load the given SUBSET of the given DATASET.
+        """
+
+        self._data = load_dataset_dictionary(dataset, subset=subset)
+
+        # Precalculate the number of available shapes
+        self.number_of_shapes = {}
+        for digit in self._data.keys():
+            self.number_of_shapes[digit] = len(self._data[digit])
+
+    def random_shape(self, digit):
+        """
+        Get a random shape for the given digit.
+        """
+
+        digit = int(digit)
+
+        # Ensure that the token is defined
+        if not digit in self.number_of_shapes.keys():
+            msg = "\nERROR No data defined for token '{}'!".format(digit)
+            raise SystemExit(msg)
+
+        num = self.number_of_shapes[digit]
+        index = np.random.randint(num)
+        
+        shape = self._data[digit][index]
+
+        # Apply the augmentation pipeline
+        shape = self.apply(shape)
+
+        return Image(shape)
+
+    def dump_digit_shape(self, digit, index, pretty=True):
+        """Dump the digit with the given index to stdout.
+        When PRETTY is true, use a pretty printer.
+
+        Example: 
+
+        `self.dump_digit_shape(9, 0)` returns the first shape of digit 0
+        from the actual dataset.
+
+        """
+
+        shape = self._data[digit][index]
+        
+        print("Shape {} of digit {} from dataset <{}, {}>:\n".format(
+            index, digit, self._dataset, self._subset))
+        
+        if not pretty:
+            print(shape)
+        else:
+            pretty_print_numpy_array(shape)
+
+    def _make_timestamped_name(self, basename, entity):
+        """
+        Add a timestamp to NAME and return it.
+        """
+
+        # The name for the image to save
+        timestamp = time.time()
+        date_time_str = datetime.datetime.fromtimestamp(timestamp).strftime('%Y-%m-%d.%H-%M-%S')
+        imgname = '{}.{}.{}'.format(basename, entity, date_time_str)
+
+        return imgname
+
+    def grid(self, digit, 
+             height=10, width=10, 
+             spec=None):
+        """
+        Make a grid of random shapes of digit.
+        """
+
+        # When a data set specification file
+        # with an augmentation pipeline spec has been given
+        # load the pipeline from the file
+        if spec != None:
+            self.load_augmentation_pipeline_from_file(spec)
+            self.print_pipeline()
+
+        # The name for the image to save
+        imgname = self._make_timestamped_name('grid', digit)
+
+        generator = lambda: self.random_shape(digit)
+        image = image_grid(generator, height, width)
+        image.set_name(imgname)
+
+        return image
+
+    def sequence(self, sequence, 
+                 spacing_range=(0, 3), image_width=100, 
+                 spec=None,
+                 debug=False):
+        """
+        Generate a sequence of digits.
+        
+        The images are generated by img_generator()
+        and must be of the same size.
+        """
+
+        # When a data set specification file
+        # with an augmentation pipeline spec has been given
+        # load the pipeline from the file
+        if spec != None:
+            self.load_augmentation_pipeline_from_file(spec)
+            self.print_pipeline()
+
+        # The name for the image to save
+        imgname = self._make_timestamped_name('sequence', sequence)
+
+        # Unpacking the parameters
+        sequence = [int(c) for c in list(str(sequence))]
+        lsequence = len(sequence)
+        srmin, srmax = spacing_range
+
+        # Generate random spaces
+        spaces = _random_spaces(srmin, srmax, lsequence)
+
+        # Getting the size of the generated images
+        image     = self.random_shape(0)
+        dtype     = image.data.dtype
+        imgheight = image.data.shape[0]
+        imgwidth  = image.data.shape[1]
+        
+        # DEBUG
+        if debug:
+            print("dtype:     {}".format(dtype) +
+                  "imgheight: {}".format(imgheight) +
+                  "imgwidth:  {}".format(imgwidth))
+            
+        # When image_width is set to 0 
+        # the minimal image width is used
+        if image_width == 0:
+            
+            # Calculate the minimal image width 
+            # given the random spaces
+            image_width = \
+                imgwidth * lsequence \
+                + sum(spaces[:-1])
+
+        else:
+
+            # Calculating the size of the image grid
+            minwidth = (imgwidth + srmax) * lsequence - srmax
+
+            # Ensure that the given image width is wide enough
+            if (image_width < minwidth):
+            
+                msg = '\nERROR The given image width of {} is too small!\n\n' \
+                      '  The minimum width is ' \
+                      '({} + {}) * {} = {}.\n'.format(image_width,
+                                                      imgwidth, srmax, lsequence, 
+                                                      minwidth)
+                raise SystemExit(msg)
+    
+        # Creating the resultimage
+        image = Image((imgheight, image_width))
+        image.set_name(imgname)
+
+        # Use a white background
+        #| white = 255
+        white = 1.0
+        image.fill(white)
+        
+        # Filling the grid with the generated images
+        x, y = 0, 0 # Initial digit indents
+        for digit, space in zip(sequence, spaces):
+
+            # Get a random space for DIGIT
+            subimage = self.random_shape(digit)
+
+            # Arrange it in the image
+            image.set_subimage(y, x, subimage)
+
+            # Calculate the indent for the next digit
+            x += imgwidth + space
+                
+        return image
+
+    def image(self, label,
+              name=None,
+              spec=None,
+              debug=False):
+        """
+        Generate an image.
+        """
+
+        # The name for the image to save
+        if name == None:
+            name = self._make_timestamped_name('image', label)
+
+        # When a data set specification file
+        # with an augmentation pipeline spec has been given
+        # load the pipeline from the file
+        if spec != None:
+            self.load_augmentation_pipeline_from_file(spec)
+            self.print_pipeline()
+
+        #| # Unpacking the parameters
+        #| sequence = [int(c) for c in list(str(sequence))]
+        #| lsequence = len(sequence)
+        #| srmin, srmax = spacing_range
+        #| 
+        #| # Generate random spaces
+        #| spaces = _random_spaces(srmin, srmax, lsequence)
+        #| 
+        #| # Getting the size of the generated images
+        #| image     = self.random_shape(0)
+        #| dtype     = image.data.dtype
+        #| imgheight = image.data.shape[0]
+        #| imgwidth  = image.data.shape[1]
+        #| 
+        #| # DEBUG
+        #| if debug:
+        #|     print("dtype:     {}".format(dtype) +
+        #|           "imgheight: {}".format(imgheight) +
+        #|           "imgwidth:  {}".format(imgwidth))
+        #|     
+        #| # When image_width is set to 0 
+        #| # the minimal image width is used
+        #| if image_width == 0:
+        #|     
+        #|     # Calculate the minimal image width 
+        #|     # given the random spaces
+        #|     image_width = \
+        #|                   imgwidth * lsequence \
+        #|                   + sum(spaces[:-1])
+        #| 
+        #| else:
+        #| 
+        #|     # Calculating the size of the image grid
+        #|     minwidth = (imgwidth + srmax) * lsequence - srmax
+        #| 
+        #|     # Ensure that the given image width is wide enough
+        #|     if (image_width < minwidth):
+        #|         
+        #|         msg = '\nERROR The given image width of {} is too small!\n\n' \
+        #|               '  The minimum width is ' \
+        #|               '({} + {}) * {} = {}.\n'.format(image_width,
+        #|                                               imgwidth, srmax, lsequence, 
+        #|                                               minwidth)
+        #|         raise SystemExit(msg)
+        #|     
+        #| # Creating the resultimage
+        #| image = Image((imgheight, image_width))
+        #| image.set_name(name)
+        #| 
+        #| # Use a white background
+        #| #| white = 255
+        #| white = 1.0
+        #| image.fill(white)
+        #| 
+        #| # Filling the grid with the generated images
+        #| x, y = 0, 0 # Initial digit indents
+        #| for digit, space in zip(sequence, spaces):
+        #| 
+        #|     # Get a random space for DIGIT
+        #|     subimage = self.random_shape(digit)
+        #| 
+        #|     # Arrange it in the image
+        #|     image.set_subimage(y, x, subimage)
+        #| 
+        #|     # Calculate the indent for the next digit
+        #|     x += imgwidth + space
+                
+        # Get a random shape for LABEL
+        image = self.random_shape(label)
+
+        # Set the name
+        image.set_name(name)
+
+        return image
+
+## =========================================================
+## =========================================================
+
+## fin.

@@ -1,0 +1,162 @@
+# -*- mode: yaml -*-
+## =========================================================
+## Data set specification file
+## ---------------------------------------------------------
+##
+##  - 2000 train images:
+##    - 1000 images with half notes
+##    - 1000 images with quarter notes
+##
+##  - 200 valid images:
+##    - 100 images with half notes
+##    - 100 images with quarter notes
+##
+##  - 1000 test images
+##    - 500 images with half notes
+##    - 500 images with quarter notes
+##
+## ---------------------------------------------------------
+
+dataset: 
+  name: notes000
+  classes:
+    half: 1
+    quarter: 2
+
+subsets:
+  train: 2000
+  valid:  200
+  test:  1000
+
+scale: 2
+
+dir: ~/.collagen/data/notes000
+
+#debug: True
+#debug: False
+
+## Augmentation pipeline from
+## examples/specs/notes000/notes.yaml
+
+augmentation-pipeline:
+
+  - pad:
+      colour: 1.0
+      width: 20
+
+  - distort:
+      probability: 0.5
+      mesh: [6, 6]
+      #| magnitude: 0.3
+      #| magnitude: 0.2
+      magnitude: 0.2
+      indent: 0.25
+      #| show-mesh: True
+      #| show-mesh: 0.5
+      #| show-mesh: 1.0
+      #| show-mesh: inverse
+      #| show-mesh: red
+      #| show-mesh: green
+      #| show-mesh: blue
+
+  - distort:
+      probability: 0.5
+      mesh: [4, 4]
+      magnitude: 0.15
+      #| magnitude: 0.2
+      indent: 0.25
+      #| show-mesh: True
+      #| show-mesh: 0.5
+      #| show-mesh: 1.0
+      #| show-mesh: inverse
+      #| show-mesh: red
+      #| show-mesh: green
+      #| show-mesh: blue
+
+  - distort:
+      probability: 0.5
+      mesh: [3, 3]
+      magnitude: 0.1
+      #| magnitude: 0.2
+      indent: 0.25
+      #| show-mesh: True
+      #| show-mesh: 0.5
+      #| show-mesh: 1.0
+      #| show-mesh: inverse
+      #| show-mesh: red
+      #| show-mesh: green
+      #| show-mesh: blue
+
+  - distort:
+      probability: 0.5
+      mesh: [2, 2]
+      magnitude: 0.15
+      #| magnitude: 0.2
+      indent: 0.25
+      #| show-mesh: True
+      #| show-mesh: 0.5
+      #| show-mesh: 1.0
+      #| show-mesh: inverse
+      #| show-mesh: red
+      #| show-mesh: green
+      #| show-mesh: blue
+
+  - shear:
+      probability: 0.5
+      axis: x
+      min: -20
+      max:  20
+
+  - shear:
+      probability: 0.5
+      axis: y
+      min: -20
+      max:  20
+
+  - rotate:
+      probability: 0.5
+      min: -10
+      max:  10
+
+  - unpad:
+      width: 15
+
+  - pad:
+      colour: 1.0
+      width: 15
+
+  - zoom:
+      probability: 0.5
+      min: 0.7
+      max: 1.2
+      coordinate: x
+
+  - zoom:
+      probability: 0.5
+      min: 0.7
+      max: 1.2
+      coordinate: y
+
+  - erode:
+      probability: 0.5
+      min: 1
+      max: 2
+
+  - dilate:
+      probability: 0.5
+      min: 1
+      max: 2
+
+  - translate:
+      probability: 0.5
+      coordinates: both
+      min: -0.1
+      max:  0.1
+      
+  - unpad:
+      width: 12
+
+## =========================================================
+## =========================================================
+
+## fin.

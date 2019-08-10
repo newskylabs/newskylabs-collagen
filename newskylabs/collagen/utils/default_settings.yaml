@@ -1,0 +1,21 @@
+# -*- mode: yaml -*-
+# collagen's setting file
+
+datasets:
+  mnist:
+    train:
+      images: http://yann.lecun.com/exdb/mnist/train-images-idx3-ubyte.gz
+      labels: http://yann.lecun.com/exdb/mnist/train-labels-idx1-ubyte.gz
+    test:
+      images: http://yann.lecun.com/exdb/mnist/t10k-images-idx3-ubyte.gz
+      labels: http://yann.lecun.com/exdb/mnist/t10k-labels-idx1-ubyte.gz
+        
+data-dir: ~/.collagen/data
+
+documentation:
+  server:
+    netrc: ~/.netrc
+    host: collagen.org
+    dir: /html/collagen
+
+# fin.

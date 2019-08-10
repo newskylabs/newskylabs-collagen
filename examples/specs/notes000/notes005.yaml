@@ -1,0 +1,108 @@
+# -*- mode: yaml -*-
+## =========================================================
+## Data set specification file
+## 
+## collagen sequence 012345678 --dataset notes000 --scale 6 --spec $COLLAGEN/examples/specs/notes050.yaml
+## ---------------------------------------------------------
+
+augmentation-pipeline:
+
+  - pad:
+      colour: 1.0
+      width: 20
+
+  - distort:
+      mesh: [6, 6]
+      #| magnitude: 0.3
+      #| magnitude: 0.2
+      magnitude: 0.2
+      indent: 0.25
+      #| show-mesh: True
+      #| show-mesh: 0.5
+      #| show-mesh: 1.0
+      #| show-mesh: inverse
+      #| show-mesh: red
+      #| show-mesh: green
+      #| show-mesh: blue
+
+  - distort:
+      mesh: [4, 4]
+      magnitude: 0.15
+      #| magnitude: 0.2
+      indent: 0.25
+      #| show-mesh: True
+      #| show-mesh: 0.5
+      #| show-mesh: 1.0
+      #| show-mesh: inverse
+      #| show-mesh: red
+      #| show-mesh: green
+      #| show-mesh: blue
+
+  - distort:
+      mesh: [3, 3]
+      magnitude: 0.1
+      #| magnitude: 0.2
+      indent: 0.25
+      #| show-mesh: True
+      #| show-mesh: 0.5
+      #| show-mesh: 1.0
+      #| show-mesh: inverse
+      #| show-mesh: red
+      #| show-mesh: green
+      #| show-mesh: blue
+
+  - distort:
+      mesh: [2, 2]
+      magnitude: 0.15
+      #| magnitude: 0.2
+      indent: 0.25
+      #| show-mesh: True
+      #| show-mesh: 0.5
+      #| show-mesh: 1.0
+      #| show-mesh: inverse
+      #| show-mesh: red
+      #| show-mesh: green
+      #| show-mesh: blue
+
+#|   - distort:
+#|       mesh: [2, 2]
+#|       magnitude: 0.0
+#|       #| magnitude: 0.2
+#|       indent: 0.25
+#|       #| show-mesh: True
+#|       #| show-mesh: 0.5
+#|       #| show-mesh: 1.0
+#|       show-mesh: inverse
+#|       #| show-mesh: red
+#|       #| show-mesh: green
+#|       #| show-mesh: blue
+
+#|   - distort:
+#|       mesh: [2, 2]
+#|       #| magnitude: 0.0
+#|       magnitude: 0.2
+#|       indent: 0.2
+#|       #| show-mesh: True
+#|       #| show-mesh: 0.5
+#|       #| show-mesh: 1.0
+#|       show-mesh: inverse
+#|       #| show-mesh: red
+#|       #| show-mesh: green
+#|       #| show-mesh: blue
+
+#|   - distort:
+#|       mesh: [2, 2]
+#|       magnitude: 0.2
+#| 
+#|   - distort:
+#|       mesh: [4, 4]
+#|       magnitude: 0.3
+#| 
+#|   - distort:
+#|       mesh: [4, 4]
+#|       magnitude: 0.2
+
+## =========================================================
+## =========================================================
+
+# fin.
